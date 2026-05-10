@@ -1,12 +1,9 @@
 import streamlit as st
-import pandas as pd
 import base64
+import pickle
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+# ---------- BACKGROUND IMAGE ----------
 
-# BACKGROUND IMAGE
 def get_base64(file):
     with open(file, "rb") as f:
         data = f.read()
@@ -14,8 +11,11 @@ def get_base64(file):
 
 img = get_base64("background.jpg")
 
+# ---------- PAGE DESIGN ----------
+
 page_bg = f"""
 <style>
+
 .stApp {{
     background-image: url("data:image/jpg;base64,{img}");
     background-size: cover;
@@ -27,12 +27,14 @@ page_bg = f"""
 textarea {{
     background-color: rgba(255,255,255,0.85) !important;
     color: black !important;
+    font-size: 18px !important;
 }}
 
 h1 {{
     color: white !important;
     text-align: center;
     font-size: 55px !important;
+    text-shadow: 2px 2px 5px black;
 }}
 
 .stButton>button {{
@@ -40,49 +42,46 @@ h1 {{
     color: white;
     font-size: 20px;
     border-radius: 12px;
+    padding: 10px 20px;
 }}
+
 </style>
 """
 
 st.markdown(page_bg, unsafe_allow_html=True)
 
-# LOAD DATA
-fake = pd.read_csv("Fake.csv")
-true = pd.read_csv("True.csv")
+# ---------- LOGO ----------
 
-fake["label"] = 0
-true["label"] = 1
+st.image("logo.png", width=150)
 
-data = pd.concat([fake, true])
+# ---------- LOAD SAVED MODEL ----------
 
-data["content"] = data["title"] + " " + data["text"]
+model = pickle.load(open("model.pkl", "rb"))
 
-X = data["content"]
-y = data["label"]
+vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
-vectorizer = TfidfVectorizer(stop_words='english')
+# ---------- TITLE ----------
 
-X = vectorizer.fit_transform(X)
+st.title("📰 Fake News Detection")
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2
+# ---------- USER INPUT ----------
+
+user_news = st.text_area(
+    "Enter News Here",
+    height=200
 )
 
-model = LogisticRegression()
-
-model.fit(X_train, y_train)
-
-st.title("Fake News Detection")
-
-user_news = st.text_area("Enter News Here")
+# ---------- DETECT BUTTON ----------
 
 if st.button("Detect"):
 
-    news_vector = vectorizer.transform([user_news])
+    with st.spinner("Detecting Fake News..."):
 
-    prediction = model.predict(news_vector)
+        news_vector = vectorizer.transform([user_news])
 
-    if prediction[0] == 0:
-        st.error("Fake News")
-    else:
-        st.success("Real News")
+        prediction = model.predict(news_vector)
+
+        if prediction[0] == 0:
+            st.error("⚠️ Fake News")
+        else:
+            st.success("✅ Real News")
