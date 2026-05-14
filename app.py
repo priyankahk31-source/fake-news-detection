@@ -221,58 +221,80 @@ elif st.session_state.page == "detect":
 
     # ---------- DETECT BUTTON ----------
 
-    if st.button("🔍 Detect News"):
+   # ---------- BUTTONS IN SAME LINE ----------
 
-        with st.spinner("Detecting Fake News..."):
+col1, col2 = st.columns(2)
 
-            user_news = user_news.lower()
-            user_news = user_news.replace("pm", "prime minister")
-            user_news = user_news.replace("cm", "chief minister")
-            user_news = user_news.replace("usa", "united states")
-            user_news = user_news.replace("uk", "united kingdom")
+with col1:
 
-            news_vector = vectorizer.transform([user_news])
+    detect_button = st.button("🔍 Detect News")
 
-            prediction = model.predict(news_vector)
+with col2:
 
-            if user_news.strip() != "":
-                st.session_state.history.append(user_news[:50])
+    back_button = st.button("⬅ Back To Home")
 
-            st.markdown("<br>", unsafe_allow_html=True)
+# ---------- DETECT ----------
 
-            if prediction[0] == 0:
+if detect_button:
 
-                st.markdown("""
-                <div style="
-                    background-color:#ff4b4b;
-                    padding:20px;
-                    border-radius:15px;
-                    text-align:center;
-                    font-size:35px;
-                    color:white;
-                    font-weight:bold;
-                    box-shadow:0px 0px 15px black;
-                ">
-                    ⚠️ FAKE NEWS DETECTED
-                </div>
-                """, unsafe_allow_html=True)
+    with st.spinner("Detecting Fake News..."):
 
-            else:
+        user_news = user_news.lower()
+        user_news = user_news.replace("pm", "prime minister")
+        user_news = user_news.replace("cm", "chief minister")
+        user_news = user_news.replace("usa", "united states")
+        user_news = user_news.replace("uk", "united kingdom")
 
-                st.markdown("""
-                <div style="
-                    background-color:#00c853;
-                    padding:20px;
-                    border-radius:15px;
-                    text-align:center;
-                    font-size:35px;
-                    color:white;
-                    font-weight:bold;
-                    box-shadow:0px 0px 15px black;
-                ">
-                    ✅ REAL NEWS DETECTED
-                </div>
-                """, unsafe_allow_html=True)
+        news_vector = vectorizer.transform([user_news])
+
+        prediction = model.predict(news_vector)
+
+        if user_news.strip() != "":
+            st.session_state.history.append(user_news[:50])
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        if prediction[0] == 0:
+
+            st.markdown("""
+            <div style="
+                background-color:#ff4b4b;
+                padding:20px;
+                border-radius:15px;
+                text-align:center;
+                font-size:35px;
+                color:white;
+                font-weight:bold;
+                box-shadow:0px 0px 15px black;
+            ">
+                ⚠️ FAKE NEWS DETECTED
+            </div>
+            """, unsafe_allow_html=True)
+
+        else:
+
+            st.markdown("""
+            <div style="
+                background-color:#00c853;
+                padding:20px;
+                border-radius:15px;
+                text-align:center;
+                font-size:35px;
+                color:white;
+                font-weight:bold;
+                box-shadow:0px 0px 15px black;
+            ">
+                ✅ REAL NEWS DETECTED
+            </div>
+            """, unsafe_allow_html=True)
+
+# ---------- BACK BUTTON ----------
+
+if back_button:
+
+    st.session_state.page = "home"
+
+    st.rerun()
 
     # ---------- BACK BUTTON ----------
 
