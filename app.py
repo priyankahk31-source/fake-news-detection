@@ -121,7 +121,9 @@ elif st.session_state.page == "detect":
     vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
     st.title("📰 Fake News Detection")
-if st.button("⬅ Back to Home"):
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    if st.button("⬅ Back to Home"):
 
     st.session_state.page = "home"
 
