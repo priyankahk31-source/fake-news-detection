@@ -142,6 +142,22 @@ elif st.session_state.page == "detect":
         border-radius: 12px;
         padding: 10px 20px;
     }}
+    /* Floating mic button */
+    .mic-btn {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background-color: darkred;
+        color: white;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+        text-align: center;
+        line-height: 60px;
+        cursor: pointer;
+        box-shadow: 0px 0px 10px black;
+    }
     </style>
     """
     st.markdown(page_bg, unsafe_allow_html=True)
@@ -158,10 +174,22 @@ elif st.session_state.page == "detect":
     st.markdown("### Enter News Article/Text")
 
     # ---------- INPUT ----------
+    # Default manual input
+    user_news = st.text_area(
+        "Paste News Here",
+        height=250,
+        key="manual_input"
+    )
+
+    # Floating mic button
+    st.markdown('<div class="mic-btn">🎤</div>', unsafe_allow_html=True)
+
+    # Mic recorder widget (hidden until clicked)
     audio = mic_recorder(
         start_prompt="🎤 Start Recording",
         stop_prompt="⏹ Stop Recording",
-        just_once=True
+        just_once=True,
+        key="mic_widget"
     )
 
     if audio:
@@ -171,21 +199,9 @@ elif st.session_state.page == "detect":
             try:
                 text = recognizer.recognize_google(data)
                 st.success("Voice Converted Successfully")
-                user_news = st.text_area(
-                    "Paste News Here",
-                    value=text,
-                    height=250,
-                    key="voice_input"
-                )
+                user_news = text
             except:
                 st.error("Could not recognize voice")
-                user_news = ""
-    else:
-        user_news = st.text_area(
-            "Paste News Here",
-            height=250,
-            key="manual_input"
-        )
 
     # ---------- BUTTONS ----------
     col1, col2 = st.columns(2)
