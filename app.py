@@ -1,4 +1,4 @@
-```python
+
 import streamlit as st
 import base64
 import pickle
@@ -226,7 +226,8 @@ elif st.session_state.page == "detect":
 
             prediction = model.predict(news_vector)
 
-            st.session_state.history.append(user_news[:50])
+            if user_news.strip() != "":
+                st.session_state.history.append(user_news[:50])
 
             st.markdown("<br>", unsafe_allow_html=True)
 
@@ -244,5 +245,4 @@ elif st.session_state.page == "detect":
         st.session_state.page = "home"
 
         st.rerun()
-```
 
