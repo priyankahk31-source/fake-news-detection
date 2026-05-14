@@ -143,7 +143,7 @@ elif st.session_state.page == "detect":
         padding: 10px 20px;
     }}
     /* Floating mic button */
-    .mic-btn {
+    .mic-btn {{
         position: fixed;
         bottom: 25px;
         right: 25px;
@@ -157,7 +157,7 @@ elif st.session_state.page == "detect":
         line-height: 60px;
         cursor: pointer;
         box-shadow: 0px 0px 10px black;
-    }
+    }}
     </style>
     """
     st.markdown(page_bg, unsafe_allow_html=True)
@@ -174,7 +174,6 @@ elif st.session_state.page == "detect":
     st.markdown("### Enter News Article/Text")
 
     # ---------- INPUT ----------
-    # Default manual input
     user_news = st.text_area(
         "Paste News Here",
         height=250,
@@ -182,9 +181,11 @@ elif st.session_state.page == "detect":
     )
 
     # Floating mic button
-    st.markdown('<div class="mic-btn">🎤</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="mic-btn">🎤</div>
+    """, unsafe_allow_html=True)
 
-    # Mic recorder widget (hidden until clicked)
+    # Mic recorder widget
     audio = mic_recorder(
         start_prompt="🎤 Start Recording",
         stop_prompt="⏹ Stop Recording",
