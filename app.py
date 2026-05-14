@@ -1,31 +1,75 @@
 import streamlit as st
-    Fake news spreads misinformation rapidly through social media and digital platforms.
+import base64
+import pickle
 
-    This AI-powered system helps users identify whether a news article is REAL or FAKE using Machine Learning and NLP.
+# ---------- PAGE SWITCH ----------
 
-    ---
+if "page" not in st.session_state:
+    st.session_state.page = "home"
 
-    ## Categories of News
+# ---------- BACKGROUND ----------
 
-    🗳 Politics
-    ⚽ Sports
-    🎬 Entertainment
-    💻 Technology
-    🏥 Health
-    💼 Business
+def get_base64(file):
+    with open(file, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
-    ---
+# ---------- HOME PAGE ----------
 
-    ## Features
+if st.session_state.page == "home":
 
-    ✅ AI Detection
-    ✅ Fast Prediction
-    ✅ User Friendly Interface
-    ✅ Machine Learning Based
-    ✅ NLP Processing
+    st.title("📰 AI Fake News Detection System")
 
-    ---
-    """)
+    st.markdown("""
+
+## Welcome
+
+Fake news spreads misinformation rapidly through social media and digital platforms.
+
+This AI-powered system helps users identify whether a news article is REAL or FAKE using Machine Learning and NLP.
+
+---
+
+## Categories of News
+
+🗳 Politics  
+⚽ Sports  
+🎬 Entertainment  
+💻 Technology  
+🏥 Health  
+💼 Business  
+
+---
+
+## Features
+
+✅ AI Detection  
+✅ Fast Prediction  
+✅ User Friendly Interface  
+✅ Machine Learning Based  
+✅ NLP Processing  
+
+---
+
+## Technologies Used
+
+🐍 Python  
+🤖 Machine Learning  
+📚 NLP  
+🌐 Streamlit  
+🧠 Scikit-learn  
+
+---
+
+## Future Scope
+
+🎤 Voice Input  
+🌍 Multi-language Detection  
+🔗 URL Detection  
+🧠 Deep Learning  
+📱 Mobile Friendly  
+
+""")
 
     if st.button("🚀 Start Detection"):
         st.session_state.page = "detect"
@@ -39,6 +83,7 @@ elif st.session_state.page == "detect":
 
     page_bg = f"""
     <style>
+
     .stApp {{
         background-image: url("data:image/jpg;base64,{img}");
         background-size: cover;
@@ -46,6 +91,25 @@ elif st.session_state.page == "detect":
         background-repeat: no-repeat;
         background-attachment: fixed;
     }}
+
+    textarea {{
+        background-color: rgba(255,255,255,0.85) !important;
+        color: black !important;
+    }}
+
+    h1 {{
+        color: white !important;
+        text-align: center;
+        font-size: 55px !important;
+    }}
+
+    .stButton>button {{
+        background-color: darkred;
+        color: white;
+        font-size: 20px;
+        border-radius: 12px;
+    }}
+
     </style>
     """
 
