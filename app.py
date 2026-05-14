@@ -1,7 +1,9 @@
 import streamlit as st
 import base64
 import pickle
+import speech_recognition as sr
 
+from streamlit_mic_recorder import mic_recorder
 # ---------- PAGE SETUP ----------
 
 st.set_page_config(
@@ -213,7 +215,39 @@ elif st.session_state.page == "detect":
     st.markdown("### Enter News Article/Text")
 
     # ---------- INPUT ----------
+audio = mic_recorder(
+    start_prompt="🎤 Start Recording",
+    stop_prompt="⏹ Stop Recording",
+    just_once=True
+)
+if audio:
 
+    recognizer = sr.Recognizer()
+
+    with sr.AudioFile(audio["path"]) as source:
+
+        data = recognizer.record(source)
+
+        try:
+            text = recognizer.recognize_google(data)
+
+            st.success("Voice Converted Successfully")
+
+            user_news = st.text_area(
+                "Paste News Here",
+                value=text,
+                height=250
+            )
+
+        except:
+            st.error("Could not recognize voice")
+
+else:
+
+    user_news = st.text_area(
+        "Paste News Here",
+        height=250
+    )
     user_news = st.text_area(
         "Paste News Here",
         height=250
