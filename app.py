@@ -121,7 +121,11 @@ elif st.session_state.page == "detect":
     vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
     st.title("📰 Fake News Detection")
+if st.button("⬅ Back to Home"):
 
+    st.session_state.page = "home"
+
+    st.rerun()
     user_news = st.text_area("Paste News Here", height=200)
 
     if st.button("Detect News"):
