@@ -1,9 +1,6 @@
 import streamlit as st
 import base64
 import pickle
-import speech_recognition as sr
-import io
-from streamlit_mic_recorder import mic_recorder
 
 # ---------- PAGE SETUP ----------
 st.set_page_config(
@@ -127,21 +124,6 @@ elif st.session_state.page == "detect":
         border-radius: 12px;
         padding: 10px 20px;
     }}
-    .mic-btn {{
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        background-color: darkred;
-        color: white;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        font-size: 28px;
-        text-align: center;
-        line-height: 60px;
-        cursor: pointer;
-        box-shadow: 0px 0px 10px black;
-    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -153,37 +135,6 @@ elif st.session_state.page == "detect":
     st.markdown("### Enter News Article/Text")
 
     user_news = st.text_area("Paste News Here", height=250, key="manual_input")
-
-    st.markdown('<div class="mic-btn">🎤</div>', unsafe_allow_html=True)
-
-    audio = mic_recorder(
-        start_prompt="🎤 Start Recording",
-        stop_prompt="⏹ Stop Recording",
-        just_once=True,
-        key="mic_widget"
-    )
-
-    if audio:
-        recognizer = sr.Recognizer()
-        data = None
-        try:
-            if "path" in audio:
-                with sr.AudioFile(audio["path"]) as source:
-                    data = recognizer.record(source)
-            elif "bytes" in audio:
-                audio_file = io.BytesIO(audio["bytes"])
-                with sr.AudioFile(audio_file) as source:
-                    data = recognizer.record(source)
-        except Exception as e:
-            st.error(f"Could not process audio: {e}")
-
-        if data:
-            try:
-                text = recognizer.recognize_google(data)
-                st.success("Voice Converted Successfully")
-                user_news = text
-            except:
-                st.error("Could not recognize voice")
 
     col1, col2 = st.columns(2)
     with col1:
