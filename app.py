@@ -220,6 +220,12 @@ elif st.session_state.page == "detect":
     if st.button("🔍 Detect News"):
 
         with st.spinner("Detecting Fake News..."):
+            user_news = user_news.lower()
+
+user_news = user_news.replace("pm", "prime minister")
+user_news = user_news.replace("cm", "chief minister")
+user_news = user_news.replace("usa", "united states")
+user_news = user_news.replace("uk", "united kingdom")
 
             news_vector = vectorizer.transform([user_news])
 
