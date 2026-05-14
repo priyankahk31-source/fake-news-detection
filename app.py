@@ -37,6 +37,15 @@ h1 {{
     text-shadow: 2px 2px 5px black;
 }}
 
+h2, h3 {{
+    color: white !important;
+}}
+
+p, li {{
+    color: white !important;
+    font-size: 18px;
+}}
+
 .stButton>button {{
     background-color: darkred;
     color: white;
@@ -60,28 +69,86 @@ model = pickle.load(open("model.pkl", "rb"))
 
 vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
-# ---------- TITLE ----------
+# ---------- HOME PAGE ----------
 
-st.title("📰 Fake News Detection")
+st.title("📰 AI Fake News Detection System")
 
-# ---------- USER INPUT ----------
+st.markdown("""
 
-user_news = st.text_area(
-    "Enter News Here",
-    height=200
-)
+## Welcome
 
-# ---------- DETECT BUTTON ----------
+Fake news spreads misinformation rapidly through social media and digital platforms.
 
-if st.button("Detect"):
+This AI-powered system helps users identify whether a news article is REAL or FAKE using Machine Learning and NLP.
 
-    with st.spinner("Detecting Fake News..."):
+---
 
-        news_vector = vectorizer.transform([user_news])
+## Categories of News
 
-        prediction = model.predict(news_vector)
+🗳 Politics  
+⚽ Sports  
+🎬 Entertainment  
+💻 Technology  
+🏥 Health  
+💼 Business  
 
-        if prediction[0] == 0:
-            st.error("⚠️ Fake News")
-        else:
-            st.success("✅ Real News")
+---
+
+## Features
+
+✅ AI Detection  
+✅ Fast Prediction  
+✅ User Friendly Interface  
+✅ Machine Learning Based  
+✅ NLP Processing  
+
+---
+
+## Technologies Used
+
+🐍 Python  
+🤖 Machine Learning  
+📚 NLP  
+🌐 Streamlit  
+🧠 Scikit-learn  
+
+---
+
+## Future Scope
+
+🎤 Voice Input  
+🌍 Multi-language Detection  
+🔗 News URL Detection  
+🧠 BERT & Deep Learning  
+📱 Mobile Friendly System
+
+---
+""")
+
+# ---------- START BUTTON ----------
+
+start = st.button("🚀 Start Detection")
+
+# ---------- MAIN DETECTOR ----------
+
+if start:
+
+    st.subheader("📝 Enter News Article")
+
+    user_news = st.text_area(
+        "Paste News Here",
+        height=200
+    )
+
+    if st.button("Detect News"):
+
+        with st.spinner("Detecting Fake News..."):
+
+            news_vector = vectorizer.transform([user_news])
+
+            prediction = model.predict(news_vector)
+
+            if prediction[0] == 0:
+                st.error("⚠️ Fake News")
+            else:
+                st.success("✅ Real News")
