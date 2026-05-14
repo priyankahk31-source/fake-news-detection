@@ -4,7 +4,6 @@ import pickle
 import speech_recognition as sr
 import io
 from streamlit_mic_recorder import mic_recorder
-from pydub import AudioSegment   # NEW: for audio conversion
 
 # ---------- PAGE SETUP ----------
 st.set_page_config(
@@ -47,32 +46,22 @@ if st.session_state.page == "home":
     </style>
     """, unsafe_allow_html=True)
 
-    # ---------- DASHBOARD ----------
     col1, col2, col3 = st.columns(3)
     col1.metric("Users", "10K+")
     col2.metric("Accuracy", "96%")
     col3.metric("Detected", "8K+")
 
     st.markdown("---")
-
-    # ---------- LOGO ----------
     st.image("logo.png", width=180)
-
-    # ---------- TITLE ----------
     st.title("📰 Google AI Fake News Detector")
 
-    # ---------- CONTENT ----------
     st.markdown("""
 ## Detect Fake News Instantly
-This AI platform helps users identify whether online news is REAL or FAKE.
-
-Users can:
 ✅ Verify news articles  
 ✅ Detect misinformation  
 ✅ Check social media news  
 ✅ Analyze online content  
 ✅ Improve awareness against fake information  
-
 ---
 ## What This Website Provides
 🌍 Trusted AI News Verification  
@@ -81,7 +70,6 @@ Users can:
 📱 User Friendly Experience  
 🧠 AI-Based Prediction  
 📊 Smart Detection Dashboard  
-
 ---
 ## News Categories Supported
 🗳 Politics  
@@ -95,7 +83,6 @@ Users can:
 ---
 """)
 
-    # ---------- HISTORY ----------
     st.subheader("📜 Recent Searches")
     if len(st.session_state.history) == 0:
         st.info("No searches yet")
@@ -103,9 +90,6 @@ Users can:
         for item in st.session_state.history[-5:]:
             st.write("•", item)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # ---------- START BUTTON ----------
     if st.button("🚀 Start Detection"):
         st.session_state.page = "detect"
         st.rerun()
@@ -116,7 +100,7 @@ Users can:
 elif st.session_state.page == "detect":
 
     img = get_base64("background.jpg")
-    page_bg = f"""
+    st.markdown(f"""
     <style>
     .stApp {{
         background-image: url("data:image/jpg;base64,{img}");
@@ -136,7 +120,6 @@ elif st.session_state.page == "detect":
         font-size: 55px !important;
         text-shadow: 1px 1px 3px white;
     }}
-    label, p, div {{ color: black !important; }}
     .stButton>button {{
         background-color: darkred;
         color: white;
@@ -144,7 +127,6 @@ elif st.session_state.page == "detect":
         border-radius: 12px;
         padding: 10px 20px;
     }}
-    /* Floating mic button */
     .mic-btn {{
         position: fixed;
         bottom: 25px;
@@ -161,31 +143,19 @@ elif st.session_state.page == "detect":
         box-shadow: 0px 0px 10px black;
     }}
     </style>
-    """
-    st.markdown(page_bg, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-    # ---------- LOGO ----------
     st.image("logo.png", width=150)
-
-    # ---------- LOAD MODEL ----------
     model = pickle.load(open("model.pkl", "rb"))
     vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
-    # ---------- TITLE ----------
     st.title("📰 Fake News Detection")
     st.markdown("### Enter News Article/Text")
 
-    # ---------- INPUT ----------
-    user_news = st.text_area(
-        "Paste News Here",
-        height=250,
-        key="manual_input"
-    )
+    user_news = st.text_area("Paste News Here", height=250, key="manual_input")
 
-    # Floating mic button
     st.markdown('<div class="mic-btn">🎤</div>', unsafe_allow_html=True)
 
-    # Mic recorder widget
     audio = mic_recorder(
         start_prompt="🎤 Start Recording",
         stop_prompt="⏹ Stop Recording",
@@ -196,21 +166,16 @@ elif st.session_state.page == "detect":
     if audio:
         recognizer = sr.Recognizer()
         data = None
-        if "path" in audio:
-            with sr.AudioFile(audio["path"]) as source:
-                data = recognizer.record(source)
-        elif "bytes" in audio:
-            # Convert bytes (WebM/OGG) into WAV using pydub
-            audio_file = io.BytesIO(audio["bytes"])
-            try:
-                sound = AudioSegment.from_file(audio_file)  # auto-detects format
-                wav_io = io.BytesIO()
-                sound.export(wav_io, format="wav")
-                wav_io.seek(0)
-                with sr.AudioFile(wav_io) as source:
+        try:
+            if "path" in audio:
+                with sr.AudioFile(audio["path"]) as source:
                     data = recognizer.record(source)
-            except Exception as e:
-                st.error(f"Could not process audio: {e}")
+            elif "bytes" in audio:
+                audio_file = io.BytesIO(audio["bytes"])
+                with sr.AudioFile(audio_file) as source:
+                    data = recognizer.record(source)
+        except Exception as e:
+            st.error(f"Could not process audio: {e}")
 
         if data:
             try:
@@ -220,14 +185,12 @@ elif st.session_state.page == "detect":
             except:
                 st.error("Could not recognize voice")
 
-    # ---------- BUTTONS ----------
     col1, col2 = st.columns(2)
     with col1:
         detect_button = st.button("🔍 Detect News")
     with col2:
         back_button = st.button("⬅ Back To Home")
 
-    # ---------- DETECT ----------
     if detect_button and user_news.strip() != "":
         with st.spinner("Detecting Fake News..."):
             user_news = user_news.lower()
@@ -240,40 +203,24 @@ elif st.session_state.page == "detect":
             prediction = model.predict(news_vector)
 
             st.session_state.history.append(user_news[:50])
-            st.markdown("<br>", unsafe_allow_html=True)
 
             if prediction[0] == 0:
                 st.markdown("""
-                <div style="
-                    background-color:#ff4b4b;
-                    padding:20px;
-                    border-radius:15px;
-                    text-align:center;
-                    font-size:35px;
-                    color:white;
-                    font-weight:bold;
-                    box-shadow:0px 0px 15px black;
-                ">
+                <div style="background-color:#ff4b4b;padding:20px;border-radius:15px;
+                text-align:center;font-size:35px;color:white;font-weight:bold;
+                box-shadow:0px 0px 15px black;">
                     ⚠️ FAKE NEWS DETECTED
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown("""
-                <div style="
-                    background-color:#00c853;
-                    padding:20px;
-                    border-radius:15px;
-                    text-align:center;
-                    font-size:35px;
-                    color:white;
-                    font-weight:bold;
-                    box-shadow:0px 0px 15px black;
-                ">
+                <div style="background-color:#00c853;padding:20px;border-radius:15px;
+                text-align:center;font-size:35px;color:white;font-weight:bold;
+                box-shadow:0px 0px 15px black;">
                     ✅ REAL NEWS DETECTED
                 </div>
                 """, unsafe_allow_html=True)
 
-    # ---------- BACK BUTTON ----------
     if back_button:
         st.session_state.page = "home"
         st.rerun()
