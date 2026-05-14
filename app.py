@@ -2,80 +2,151 @@ import streamlit as st
 import base64
 import pickle
 
+# ---------- PAGE SETUP ----------
+
+st.set_page_config(
+    page_title="Fake News Detection",
+    page_icon="📰",
+    layout="centered"
+)
+
 # ---------- PAGE SWITCH ----------
 
 if "page" not in st.session_state:
     st.session_state.page = "home"
 
-# ---------- BACKGROUND ----------
+# ---------- BACKGROUND FUNCTION ----------
 
 def get_base64(file):
     with open(file, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
-# ---------- HOME PAGE ----------
+# =========================================================
+# HOME PAGE
+# =========================================================
 
 if st.session_state.page == "home":
+
+    # WHITE HOME PAGE DESIGN
+
+    st.markdown("""
+    <style>
+
+    .stApp {
+        background-color: white;
+    }
+
+    h1 {
+        color: black !important;
+        text-align: center;
+        font-size: 55px !important;
+    }
+
+    h2, h3 {
+        color: #111111 !important;
+    }
+
+    p, li {
+        color: #333333 !important;
+        font-size: 18px !important;
+    }
+
+    .stButton>button {
+        background-color: darkred;
+        color: white;
+        font-size: 22px;
+        border-radius: 12px;
+        padding: 12px 25px;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
 
     st.title("📰 AI Fake News Detection System")
 
     st.markdown("""
+    ## Welcome
 
-## Welcome
+    Fake news has become one of the biggest challenges in the digital world.
 
-Fake news spreads misinformation rapidly through social media and digital platforms.
+    Social media platforms spread information rapidly, making it difficult to identify whether news is REAL or FAKE.
 
-This AI-powered system helps users identify whether a news article is REAL or FAKE using Machine Learning and NLP.
+    This AI-powered Fake News Detection System uses:
 
----
+    - Machine Learning
+    - Natural Language Processing (NLP)
+    - Text Analysis
 
-## Categories of News
+    to classify news articles accurately.
 
-🗳 Politics  
-⚽ Sports  
-🎬 Entertainment  
-💻 Technology  
-🏥 Health  
-💼 Business  
+    ---
 
----
+    ## Why Fake News Detection is Important
 
-## Features
+    ✅ Prevents misinformation  
+    ✅ Creates awareness  
+    ✅ Helps people identify trusted news  
+    ✅ Reduces online rumors  
+    ✅ Supports responsible journalism  
 
-✅ AI Detection  
-✅ Fast Prediction  
-✅ User Friendly Interface  
-✅ Machine Learning Based  
-✅ NLP Processing  
+    ---
 
----
+    ## Categories of News
 
-## Technologies Used
+    🗳 Politics  
+    ⚽ Sports  
+    🎬 Entertainment  
+    💻 Technology  
+    🏥 Health  
+    💼 Business  
+    🌍 International News  
+    📱 Social Media News  
 
-🐍 Python  
-🤖 Machine Learning  
-📚 NLP  
-🌐 Streamlit  
-🧠 Scikit-learn  
+    ---
 
----
+    ## Main Features
 
-## Future Scope
+    ✅ AI-Based Prediction  
+    ✅ Real vs Fake Classification  
+    ✅ Fast Detection System  
+    ✅ NLP Text Processing  
+    ✅ Interactive User Interface  
+    ✅ Easy To Use  
 
-🎤 Voice Input  
-🌍 Multi-language Detection  
-🔗 URL Detection  
-🧠 Deep Learning  
-📱 Mobile Friendly  
+    ---
 
-""")
+    ## Technologies Used
+
+    🐍 Python  
+    🤖 Machine Learning  
+    📚 NLP  
+    🌐 Streamlit  
+    🧠 Scikit-learn  
+
+    ---
+
+    ## Future Scope
+
+    🎤 Voice Input Detection  
+    🌍 Multi-language Support  
+    🔗 News URL Detection  
+    🧠 Deep Learning Integration  
+    📱 Better Mobile Support  
+    ☁️ Cloud Database Support  
+
+    ---
+    """)
+
+    st.markdown("<br>", unsafe_allow_html=True)
 
     if st.button("🚀 Start Detection"):
         st.session_state.page = "detect"
         st.rerun()
 
-# ---------- DETECTOR PAGE ----------
+# =========================================================
+# DETECTION PAGE
+# =========================================================
 
 elif st.session_state.page == "detect":
 
@@ -93,14 +164,16 @@ elif st.session_state.page == "detect":
     }}
 
     textarea {{
-        background-color: rgba(255,255,255,0.85) !important;
+        background-color: rgba(255,255,255,0.90) !important;
         color: black !important;
+        font-size: 18px !important;
     }}
 
     h1 {{
         color: white !important;
         text-align: center;
         font-size: 55px !important;
+        text-shadow: 2px 2px 5px black;
     }}
 
     .stButton>button {{
@@ -108,6 +181,7 @@ elif st.session_state.page == "detect":
         color: white;
         font-size: 20px;
         border-radius: 12px;
+        padding: 10px 20px;
     }}
 
     </style>
@@ -115,22 +189,31 @@ elif st.session_state.page == "detect":
 
     st.markdown(page_bg, unsafe_allow_html=True)
 
+    # LOGO
+
     st.image("logo.png", width=150)
+
+    # LOAD MODEL
 
     model = pickle.load(open("model.pkl", "rb"))
     vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
+    # TITLE
+
     st.title("📰 Fake News Detection")
-    st.markdown("<br><br>", unsafe_allow_html=True)
 
-    if st.button("⬅ Back to Home"):
+    st.markdown("### Enter News Article/Text")
 
-    st.session_state.page = "home"
+    # TEXT AREA
 
-    st.rerun()
-    user_news = st.text_area("Paste News Here", height=200)
+    user_news = st.text_area(
+        "Paste News Here",
+        height=250
+    )
 
-    if st.button("Detect News"):
+    # DETECT BUTTON
+
+    if st.button("🔍 Detect News"):
 
         with st.spinner("Detecting Fake News..."):
 
@@ -138,7 +221,19 @@ elif st.session_state.page == "detect":
 
             prediction = model.predict(news_vector)
 
+            st.markdown("<br>", unsafe_allow_html=True)
+
             if prediction[0] == 0:
-                st.error("⚠️ Fake News")
+                st.error("⚠️ This News is FAKE")
             else:
-                st.success("✅ Real News")
+                st.success("✅ This News is REAL")
+
+    # BACK BUTTON AT BOTTOM
+
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+
+    if st.button("⬅ Back To Home"):
+
+        st.session_state.page = "home"
+
+        st.rerun()
