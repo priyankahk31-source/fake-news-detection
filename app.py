@@ -38,8 +38,8 @@ if st.session_state.page == "home":
         background-color: white;
     }
 
-   h1 {{
-    color: black !important;
+    h1 {
+        color: black !important;
         text-align: center;
         font-size: 55px !important;
     }
@@ -174,10 +174,14 @@ elif st.session_state.page == "detect":
     }}
 
     h1 {{
-        color: white !important;
+        color: black !important;
         text-align: center;
         font-size: 55px !important;
-        text-shadow: 2px 2px 5px black;
+        text-shadow: 1px 1px 3px white;
+    }}
+
+    label, p, div {{
+        color: black !important;
     }}
 
     .stButton>button {{
