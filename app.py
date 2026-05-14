@@ -29,57 +29,84 @@ if st.session_state.page == "home":
 
     st.markdown("""
     <style>
-    .stApp { background-color: white; }
-    h1 { color: black !important; text-align: center; font-size: 55px !important; }
-    h2, h3 { color: #111111 !important; }
-    p, li { color: #333333 !important; font-size: 18px !important; }
+    .stApp { background-color: #f9f9f9; }
+    h1 { 
+        font-family: 'Helvetica Neue', Arial, sans-serif; 
+        color: #222222 !important; 
+        text-align: center; 
+        font-size: 48px !important; 
+        font-weight: 700;
+    }
+    h2, h3 { 
+        font-family: 'Helvetica Neue', Arial, sans-serif; 
+        color: #333333 !important; 
+        font-weight: 600;
+    }
+    p, li { 
+        font-family: 'Helvetica Neue', Arial, sans-serif; 
+        color: #444444 !important; 
+        font-size: 18px !important; 
+        line-height: 1.6;
+    }
     .stButton>button {
-        background-color: darkred;
+        background-color: #8B0000;
         color: white;
-        font-size: 22px;
-        border-radius: 12px;
+        font-size: 20px;
+        border-radius: 10px;
         padding: 12px 25px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+    .stButton>button:hover {
+        background-color: #a00000;
     }
     </style>
     """, unsafe_allow_html=True)
 
+    # Logo + Title
+    st.image("logo.png", width=200)
+    st.title("📰 Google AI Fake News Detector")
+
+    # Metrics
     col1, col2, col3 = st.columns(3)
     col1.metric("Users", "10K+")
     col2.metric("Accuracy", "96%")
     col3.metric("Detected", "8K+")
 
     st.markdown("---")
-    st.image("logo.png", width=180)
-    st.title("📰 Google AI Fake News Detector")
 
+    # Features
     st.markdown("""
 ## Detect Fake News Instantly
-✅ Verify news articles  
-✅ Detect misinformation  
-✅ Check social media news  
-✅ Analyze online content  
-✅ Improve awareness against fake information  
+- ✅ Verify news articles  
+- ✅ Detect misinformation  
+- ✅ Check social media news  
+- ✅ Analyze online content  
+- ✅ Improve awareness against fake information  
+
 ---
 ## What This Website Provides
-🌍 Trusted AI News Verification  
-🔍 Instant News Analysis  
-⚡ Fast Fake News Detection  
-📱 User Friendly Experience  
-🧠 AI-Based Prediction  
-📊 Smart Detection Dashboard  
+- 🌍 Trusted AI News Verification  
+- 🔍 Instant News Analysis  
+- ⚡ Fast Fake News Detection  
+- 📱 User Friendly Experience  
+- 🧠 AI-Based Prediction  
+- 📊 Smart Detection Dashboard  
+
 ---
 ## News Categories Supported
-🗳 Politics  
-⚽ Sports  
-🎬 Entertainment  
-💻 Technology  
-🏥 Health  
-💼 Business  
-🌍 International News  
-📱 Social Media News  
+- 🗳 Politics  
+- ⚽ Sports  
+- 🎬 Entertainment  
+- 💻 Technology  
+- 🏥 Health  
+- 💼 Business  
+- 🌍 International News  
+- 📱 Social Media News  
 ---
 """)
 
+    # Recent Searches
     st.subheader("📜 Recent Searches")
     if len(st.session_state.history) == 0:
         st.info("No searches yet")
@@ -107,22 +134,30 @@ elif st.session_state.page == "detect":
         background-attachment: fixed;
     }}
     textarea {{
-        background-color: rgba(255,255,255,0.90) !important;
-        color: black !important;
+        background-color: rgba(255,255,255,0.95) !important;
+        color: #222222 !important;
         font-size: 18px !important;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
     }}
     h1 {{
-        color: black !important;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        color: #222222 !important;
         text-align: center;
-        font-size: 55px !important;
-        text-shadow: 1px 1px 3px white;
+        font-size: 48px !important;
+        font-weight: 700;
+        text-shadow: 1px 1px 3px #ffffff;
     }}
     .stButton>button {{
-        background-color: darkred;
+        background-color: #8B0000;
         color: white;
-        font-size: 20px;
-        border-radius: 12px;
+        font-size: 18px;
+        border-radius: 10px;
         padding: 10px 20px;
+        font-weight: 600;
+        transition: 0.3s;
+    }}
+    .stButton>button:hover {{
+        background-color: #a00000;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -158,7 +193,7 @@ elif st.session_state.page == "detect":
             if prediction[0] == 0:
                 st.markdown("""
                 <div style="background-color:#ff4b4b;padding:20px;border-radius:15px;
-                text-align:center;font-size:35px;color:white;font-weight:bold;
+                text-align:center;font-size:32px;color:white;font-weight:bold;
                 box-shadow:0px 0px 15px black;">
                     ⚠️ FAKE NEWS DETECTED
                 </div>
@@ -166,7 +201,7 @@ elif st.session_state.page == "detect":
             else:
                 st.markdown("""
                 <div style="background-color:#00c853;padding:20px;border-radius:15px;
-                text-align:center;font-size:35px;color:white;font-weight:bold;
+                text-align:center;font-size:32px;color:white;font-weight:bold;
                 box-shadow:0px 0px 15px black;">
                     ✅ REAL NEWS DETECTED
                 </div>
