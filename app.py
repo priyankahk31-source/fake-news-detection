@@ -38,8 +38,8 @@ if st.session_state.page == "home":
         background-color: white;
     }
 
-    h1 {
-        color: black !important;
+   h1 {{
+    color: black !important;
         text-align: center;
         font-size: 55px !important;
     }
