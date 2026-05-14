@@ -4,6 +4,7 @@ import pickle
 import speech_recognition as sr
 import io
 from streamlit_mic_recorder import mic_recorder
+from pydub import AudioSegment   # NEW: for audio conversion
 
 # ---------- PAGE SETUP ----------
 st.set_page_config(
@@ -199,9 +200,17 @@ elif st.session_state.page == "detect":
             with sr.AudioFile(audio["path"]) as source:
                 data = recognizer.record(source)
         elif "bytes" in audio:
+            # Convert bytes (WebM/OGG) into WAV using pydub
             audio_file = io.BytesIO(audio["bytes"])
-            with sr.AudioFile(audio_file) as source:
-                data = recognizer.record(source)
+            try:
+                sound = AudioSegment.from_file(audio_file)  # auto-detects format
+                wav_io = io.BytesIO()
+                sound.export(wav_io, format="wav")
+                wav_io.seek(0)
+                with sr.AudioFile(wav_io) as source:
+                    data = recognizer.record(source)
+            except Exception as e:
+                st.error(f"Could not process audio: {e}")
 
         if data:
             try:
