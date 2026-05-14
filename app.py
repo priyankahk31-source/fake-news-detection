@@ -231,10 +231,39 @@ elif st.session_state.page == "detect":
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            if prediction[0] == 0:
-                st.error("⚠️ This News is FAKE")
-            else:
-                st.success("✅ This News is REAL")
+          if prediction[0] == 0:
+
+    st.markdown("""
+    <div style="
+        background-color:#ff4b4b;
+        padding:20px;
+        border-radius:15px;
+        text-align:center;
+        font-size:35px;
+        color:white;
+        font-weight:bold;
+        box-shadow:0px 0px 15px black;
+    ">
+        ⚠️ FAKE NEWS DETECTED
+    </div>
+    """, unsafe_allow_html=True)
+
+else:
+
+    st.markdown("""
+    <div style="
+        background-color:#00c853;
+        padding:20px;
+        border-radius:15px;
+        text-align:center;
+        font-size:35px;
+        color:white;
+        font-weight:bold;
+        box-shadow:0px 0px 15px black;
+    ">
+        ✅ REAL NEWS DETECTED
+    </div>
+    """, unsafe_allow_html=True)
 
     # ---------- BACK BUTTON ----------
 
