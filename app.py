@@ -2,6 +2,7 @@ import streamlit as st
 import base64
 import pickle
 import speech_recognition as sr
+import io
 from streamlit_mic_recorder import mic_recorder
 
 # ---------- PAGE SETUP ----------
@@ -181,9 +182,7 @@ elif st.session_state.page == "detect":
     )
 
     # Floating mic button
-    st.markdown("""
-    <div class="mic-btn">🎤</div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="mic-btn">🎤</div>', unsafe_allow_html=True)
 
     # Mic recorder widget
     audio = mic_recorder(
@@ -195,8 +194,16 @@ elif st.session_state.page == "detect":
 
     if audio:
         recognizer = sr.Recognizer()
-        with sr.AudioFile(audio["path"]) as source:
-            data = recognizer.record(source)
+        data = None
+        if "path" in audio:
+            with sr.AudioFile(audio["path"]) as source:
+                data = recognizer.record(source)
+        elif "bytes" in audio:
+            audio_file = io.BytesIO(audio["bytes"])
+            with sr.AudioFile(audio_file) as source:
+                data = recognizer.record(source)
+
+        if data:
             try:
                 text = recognizer.recognize_google(data)
                 st.success("Voice Converted Successfully")
